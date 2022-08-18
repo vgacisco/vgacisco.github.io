@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vgacisco</title>
+    <link>https://vgacisco.github.io/</link>
+    <description>Recent content on vgacisco</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 17 Aug 2022 20:57:53 +0800</lastBuildDate><atom:link href="https://vgacisco.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>二进制安装k8s 1.24.3</title>
+      <link>https://vgacisco.github.io/post/myte/</link>
+      <pubDate>Wed, 17 Aug 2022 20:57:53 +0800</pubDate>
+      
+      <guid>https://vgacisco.github.io/post/myte/</guid>
+      <description>胡说乱说的句子 二进制安装k8s 1.24.3 架构说明
+系统说明： 这个文档使用5个centos 8 系统实现二进制安装kubernetes 1.24.3 安装， 主机地址分别为 192.168.1.21～192.168.1.25, 其中主机 21～23为master安装所有组件 ， 24～25只安装 kubelet 和 kube-proxy 作为worker节点使用
+在每个节点部署一个nginx作为负载均衡转发到apiserver的流量，这个nginx监听 127.0.0.1:6443
+系统准备
+每个系统基础环境做以下准备
+关闭防火墻 systemctl disable --now firewalld 关闭selinux setfance 0 # 编辑 /etc/selinux/config 文件 改SELINUX=disable 配置时间同步 systemctl enable --now chronyd # 这里偷个懒，直接开启chronyd服务同步网络时间。 关闭swap swapoff -a #编辑 /etc/fstab文件注释掉 swap行 加载内核模块 cat &amp;gt;&amp;gt;/etc/modules-load.d/k8s.conf &amp;lt;&amp;lt;EOF ip_vs ip_vs_lc ip_vs_wlc ip_vs_lblc ip_vs_lblcr ip_vs_nq ip_vs_sed ip_vs_rr ip_vs_wrr ip_vs_sh ip_vs_dh br_netfilter nf_conntrack ip_tables iptable_filter EOF systemctl restart systemd-modules-load.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>二进制安装k8s 1.24.3 // vgacisco</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.101.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://vgacisco.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="二进制安装k8s 1.24.3"/>
+<meta name="twitter:description" content="胡说乱说的句子 二进制安装k8s 1.24.3 架构说明
+系统说明： 这个文档使用5个centos 8 系统实现二进制安装kubernetes 1.24.3 安装， 主机地址分别为 192.168.1.21～192.168.1.25, 其中主机 21～23为master安装所有组件 ， 24～25只安装 kubelet 和 kube-proxy 作为worker节点使用
+在每个节点部署一个nginx作为负载均衡转发到apiserver的流量，这个nginx监听 127.0.0.1:6443
+系统准备
+每个系统基础环境做以下准备
+关闭防火墻 systemctl disable --now firewalld 关闭selinux setfance 0 # 编辑 /etc/selinux/config 文件 改SELINUX=disable 配置时间同步 systemctl enable --now chronyd # 这里偷个懒，直接开启chronyd服务同步网络时间。 关闭swap swapoff -a #编辑 /etc/fstab文件注释掉 swap行 加载内核模块 cat &gt;&gt;/etc/modules-load.d/k8s.conf &lt;&lt;EOF ip_vs ip_vs_lc ip_vs_wlc ip_vs_lblc ip_vs_lblcr ip_vs_nq ip_vs_sed ip_vs_rr ip_vs_wrr ip_vs_sh ip_vs_dh br_netfilter nf_conntrack ip_tables iptable_filter EOF systemctl restart systemd-modules-load."/>
+
+    <meta property="og:title" content="二进制安装k8s 1.24.3" />
+<meta property="og:description" content="胡说乱说的句子 二进制安装k8s 1.24.3 架构说明
+系统说明： 这个文档使用5个centos 8 系统实现二进制安装kubernetes 1.24.3 安装， 主机地址分别为 192.168.1.21～192.168.1.25, 其中主机 21～23为master安装所有组件 ， 24～25只安装 kubelet 和 kube-proxy 作为worker节点使用
+在每个节点部署一个nginx作为负载均衡转发到apiserver的流量，这个nginx监听 127.0.0.1:6443
+系统准备
+每个系统基础环境做以下准备
+关闭防火墻 systemctl disable --now firewalld 关闭selinux setfance 0 # 编辑 /etc/selinux/config 文件 改SELINUX=disable 配置时间同步 systemctl enable --now chronyd # 这里偷个懒，直接开启chronyd服务同步网络时间。 关闭swap swapoff -a #编辑 /etc/fstab文件注释掉 swap行 加载内核模块 cat &gt;&gt;/etc/modules-load.d/k8s.conf &lt;&lt;EOF ip_vs ip_vs_lc ip_vs_wlc ip_vs_lblc ip_vs_lblcr ip_vs_nq ip_vs_sed ip_vs_rr ip_vs_wrr ip_vs_sh ip_vs_dh br_netfilter nf_conntrack ip_tables iptable_filter EOF systemctl restart systemd-modules-load." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://vgacisco.github.io/post/myte/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-08-17T20:57:53+08:00" />
+<meta property="article:modified_time" content="2022-08-17T20:57:53+08:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://vgacisco.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>vgacisco</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">二进制安装k8s 1.24.3</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Aug 17, 2022
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="胡说乱说的句子">胡说乱说的句子</h1>
+<h1 id="二进制安装k8s-1243">二进制安装k8s 1.24.3</h1>
+<ol>
+<li>
+<p>架构说明</p>
+<p>系统说明： 这个文档使用5个centos 8 系统实现二进制安装kubernetes 1.24.3 安装， 主机地址分别为 192.168.1.21～192.168.1.25, 其中主机 21～23为master安装所有组件 ， 24～25只安装 kubelet 和 kube-proxy 作为worker节点使用</p>
+<p>在每个节点部署一个nginx作为负载均衡转发到apiserver的流量，这个nginx监听 127.0.0.1:6443</p>
+</li>
+<li>
+<p>系统准备</p>
+<p>每个系统基础环境做以下准备</p>
+<ol>
+<li>关闭防火墻
+<pre tabindex="0"><code>    systemctl disable --now firewalld
+</code></pre></li>
+<li>关闭selinux
+<pre tabindex="0"><code>    setfance 0
+    # 编辑 /etc/selinux/config 文件 改SELINUX=disable
+</code></pre></li>
+<li>配置时间同步
+<pre tabindex="0"><code>    systemctl enable --now chronyd
+    # 这里偷个懒，直接开启chronyd服务同步网络时间。
+</code></pre></li>
+<li>关闭swap
+<pre tabindex="0"><code>    swapoff -a
+    #编辑 /etc/fstab文件注释掉 swap行
+</code></pre></li>
+<li>加载内核模块
+<pre tabindex="0"><code>    cat &gt;&gt;/etc/modules-load.d/k8s.conf &lt;&lt;EOF
+    ip_vs
+    ip_vs_lc
+    ip_vs_wlc
+    ip_vs_lblc
+    ip_vs_lblcr
+    ip_vs_nq
+    ip_vs_sed
+    ip_vs_rr
+    ip_vs_wrr
+    ip_vs_sh
+    ip_vs_dh
+    br_netfilter
+    nf_conntrack
+    ip_tables
+    iptable_filter
+    EOF
+    systemctl restart systemd-modules-load.service
+</code></pre></li>
+<li>配置内核参数
+<pre tabindex="0"><code>    cat &gt;&gt; /etc/sysctl.conf &lt;&lt; EOF
+    net.bridge.bridge-nf-call-iptables = 1
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.ipv4.ip_forward = 1
+    net.ipv4.conf.all.rp_filter = 0
+    net.ipv4.conf.default.rp_filter = 0
+    vm.swappiness = 0
+    EOF
+    sysctl -p
+</code></pre></li>
+</ol>
+</li>
+<li>
+<p>证书文件说明</p>
+<p>这一步为集群生成集群使用的各种证书，为了简单，此文档只使用三个ca文件，分别为etcd-ca, kubernetes-ca , front-proxy-ca 分别用来为etcd kube-apiserver 和扩展kube-apiserver 生成证书</p>
+<p>所用证书说明如下：</p>
+<ul>
+<li>
+<p>etcd-ca etcd数据库的ca文件，用来生成etcd证书（etcd-server和etcd-client) etcd-server 在etcd数据库中使用来进行服务器间验证，etcd-client 给apiserver 和calico 使用进行身份验证：</p>
+<pre tabindex="0"><code>    {
+         &#34;CA&#34;: {&#34;expiry&#34;: &#34;87600h&#34;},   # ca过期时间
+         &#34;CN&#34;: &#34;etcd-ca&#34;,
+          &#34;hosts&#34;: [
+          ],
+          &#34;key&#34;: {
+         &#34;algo&#34;: &#34;rsa&#34;,                # ca 加密算法
+         &#34;size&#34;: 2048
+                   },
+         &#34;names&#34;: [
+         {
+           &#34;C&#34;: &#34;US&#34;,
+           &#34;ST&#34;: &#34;CA&#34;,
+           &#34;L&#34;: &#34;San Francisco&#34;,
+           &#34;O&#34;: &#34;etcd-ca&#34;,
+           &#34;OU&#34;: &#34;system&#34;
+             }
+          ]
+     }
+</code></pre><p>etcd-server:  # etcd数据库使用来和对端交互</p>
+<ul>
+<li>&ldquo;CN&rdquo;&mdash;&gt;etcd-server</li>
+<li>&ldquo;O&rdquo;&mdash;&gt;etcd-server</li>
+<li>&ldquo;hosts&rdquo;&mdash;&gt;192.168.1.21,192.168.1.22.192.168.1.23,127.0.0.1</li>
+</ul>
+<p>etcd-client: # 这个证书给etcd客户端使用，这个文档被 apiserver 和calico使用</p>
+<ul>
+<li>“CN&quot; &ndash;&gt; etcd-client</li>
+<li>&ldquo;O&rdquo; &mdash;&gt; etcd-client</li>
+<li>&ldquo;hosts&rdquo; &ndash;&gt; &quot;&quot;</li>
+</ul>
+</li>
+<li>
+<p>kubernetes-ca</p>
+</li>
+</ul>
+<pre tabindex="0"><code>    {
+        &#34;CA&#34;: { &#34;expiry&#34;: &#34;87600h&#34; },                   #非ca文档请删除掉这一行
+        &#34;CN&#34;: &#34;kubernetes-ca&#34;,
+        &#34;hosts&#34;: [
+        ],
+        &#34;key&#34;: {
+            &#34;algo&#34;: &#34;rsa&#34;,
+            &#34;size&#34;: 2048
+        },
+        &#34;names&#34;: [
+            {
+                &#34;C&#34;: &#34;CN&#34;,
+                &#34;ST&#34;: &#34;GX&#34;,
+                &#34;L&#34;: &#34;GL&#34;,
+                &#34;O&#34;: &#34;kubernetes-ca&#34;,
+                &#34;OU&#34;: &#34;system
+            }
+        ]
+    }
+</code></pre><p>kubernetes-ca 签的证书如下</p>
+<p>kube-apiserver # apiserver组件使用来做服务端证书让客户访问 ，以及作客户端证书访问 kubelet</p>
+<pre><code> kube-apiserver 主要配置 hosts  o CN
+     hosts: 应该配置 kube-apiserver部署的主机ip ， DNS ip , kubernetes server ip 以及域名
+             在这个文档为:
+                 hosts: [
+                     192.168.1.21,
+                     192.168.1.22,
+                     192.168.1.23,
+                     127.0.0.1,
+                     10.200.0.1,
+                     kubernetes,
+                     kubernetes.default,
+                     kubernetes.default.svc,
+                     kubernetes.default.svc.cluster,
+                     kubernetes.default.svc.cluster.local
+                 ]
+     O : kube-apiserver
+     CN: kube-apiserver
+
+ kube-controller-manager # kube-controller-manager 组件使用，这对用来生成 kube-controller-manager 的kubeconfig文件
+
+     kub-controller-manager 只用配置 O OU kube-apiserver 会使用CN 的值作为用户名 O的值作为组名
+
+     CN: system:kube-controller-manager
+     O: system:kube-controller-manager
+
+ kube-scheduler # kube-scheduler 组件使用，这对证书用来生成 kube-scheduler 的 kubeconfig 文件  --》 kube-scheduler.kubeconfig
+
+     kube-scheduler-manager 同kube-controller-manager 配置CN O 
+     CN: system:kube-scheduler
+     O: system:kube-scheduler
+
+ kube-proxy # kube-proxy 组件使用， 这对证书用来生成 kube-proxy 的kubeconfig 文件 
+
+     CN: system:kube-proxy
+     O: system:kube-proxy
+
+ admin   # kubectl 使用,这对证书用来生成 kubeclt 的kubeconfig.也就是主目录下的 .kube/config文件
+
+     CN: admin
+     O: system:masters # 这是kubernetes上的一个内置组，默认绑定了kubernetes 的集群管理员角色。kubectl使用这个组登录行使管理员权限
+
+
+ 生成 kubeconfig文档 ，kube-controller-manager ，kube-scheduler 和kube-proxy , kubectl 使用的 kubeconfig 文档结构如下
+
+ ```
+ kind: Config
+ clusters:
+ - name: # 起个名字，用来标识接下来的信息
+   cluster:
+     certificate-authority-data: # base64加密过的集群公钥，可以使用 $(cat kubernetes-ca.pem |base64 -w 0)得到
+     server: #apiserver的地址，这里使用负载均衡地址为 https://127.0.0.1:6443
+ users:
+ - name: # 一个字符串，用来标识接下来的用户密钥
+   user:
+     client-certificate-data: # base64加密的客户密钥公钥，使用 如：$(cat admin.pem |base64 -w 0)得到 
+     client-key-data: # base64加密的客户端密钥私钥, 使用 如：$(cat admin-key |base64 -w 0)得到
+ contexts:
+ - context:
+     cluster: # 一个字符串，用来指定上面的一个cluster
+     user: # 上面users中的一个user字符器 
+   name: # 标明这个上下文的名字
+ current-contest: # 说明使用哪个上下文 
+ apiVersion: v1
+     # 这里的示例只生成 了admin的kubconfig文档，这里得为kube-controller-manager kube-scheduler kube-proxy各生成 一个文档
+
+ ```
+
+ 为serviceaccount生成一对密钥
+ openssl genrsa -out sa.key 2048
+ openssl rsa -in sa.key -pubout -out sa.pub
+
+ kubelet 在申请证书之前要使用一个bootstrap.kubeconfig文档登录apiserver.这个 文档使用集群中的token验证，为此要准备一对文件
+     bootstrap-token-xxxxxx 和  bootstrap.kubeconfig 它们持有同一对token
+
+         可以使用以下命令对生成 token
+         a=$(head -c 16 /dev/random |md5sum |head -c 6)
+         b=$(head -c 16 /dev/random |md5sum |head -c 16)
+
+     用以下模板生成  bootstrap-token-xxxx yaml文件
+     cat &gt;&gt;bootstrap-token.yaml &lt;&lt;EOF
+     kind: Secret
+     metadata:
+       name: bootstrap-token-$a
+       namespace: kube-system
+     type: bootstrap.kubernetes.io/token
+     stringData:
+       description: &quot;default bootstrap token&quot;
+       token-id: &quot;$a&quot;
+       token-secret: &quot;$b&quot;
+       usage-bootstrap-authentication: &quot;true&quot;
+       usage-bootstrap-signing: &quot;true&quot;
+     apiVersion: v1
+     EOF
+
+     用以下命令生成 bootstrap.kubeconfig 文档
+
+     ca=$(cat kubernetes-ca.pem |base64 -w 0)
+
+     cat &gt;&gt;kubestrap.kubeconfig&lt;&lt;EOF
+     kind: Config
+     clusters:
+     - cluster:
+         certificate-authority-data: $ca
+         server: https://127.0.0.1:6443 # 服务器地址
+       name: kubernetes
+     users:
+     - user:
+         token: $a.$b
+       name: bootstrap
+     contexts:
+     - context:
+         cluster: kubernetes
+         user: bootstrap
+       name: bootstrap@kubernetes
+     current-context: bootstrap@kubernetes
+     apiVersion: v1
+     EOF
+</code></pre>
+<ul>
+<li>front-proxy-ca 这个ca文件给扩展api使用。我们用它来签一个客户证书 front-proxy-client</li>
+</ul>
+<p>{
+&ldquo;CA&rdquo;: {&ldquo;expiry&rdquo;: &ldquo;87600h&rdquo;},
+&ldquo;CN&rdquo;: &ldquo;kubernetes&rdquo;,
+&ldquo;hosts&rdquo;: [</p>
+<pre><code> ],
+ &quot;key&quot;: {
+     &quot;algo&quot;: &quot;rsa&quot;,
+     &quot;size&quot;: 2048
+ },
+ &quot;names&quot;: [
+     {
+         &quot;C&quot;: &quot;CN&quot;,
+         &quot;ST&quot;: &quot;GX&quot;,
+         &quot;L&quot;: &quot;GL&quot;,
+         &quot;O&quot;: &quot;kubernetes&quot;,
+         &quot;OU&quot;: &quot;system&quot;
+     }
+ ]
+</code></pre>
+<p>}</p>
+<p>front-proxy-client:
+O: front-proxy-client
+CN: front-proxy-client</p>
+</li>
+<li>
+<p>配置hosts文件
+略：</p>
+</li>
+<li>
+<p>安装etcd</p>
+</li>
+<li>
+<p>安装containerd</p>
+</li>
+<li>
+<p>安装nginx</p>
+</li>
+<li>
+<p>安装apiserver</p>
+</li>
+<li>
+<p>安装kube-controller-manager</p>
+</li>
+<li>
+<p>安装kube-scheduler</p>
+</li>
+<li>
+<p>安装kubelet</p>
+</li>
+<li>
+<p>安装kube-proxy</p>
+</li>
+<li>
+<p>安装calico</p>
+</li>
+<li>
+<p>安装metrics</p>
+</li>
+</ol>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
