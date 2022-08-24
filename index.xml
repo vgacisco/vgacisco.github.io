@@ -6,7 +6,25 @@
     <description>Recent content on vgacisco</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 17 Aug 2022 20:57:53 +0800</lastBuildDate><atom:link href="https://vgacisco.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 19 Aug 2022 09:50:23 +0800</lastBuildDate><atom:link href="https://vgacisco.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>kubernetes-1.24仓库 system角色说明</title>
+      <link>https://vgacisco.github.io/post/system/</link>
+      <pubDate>Fri, 19 Aug 2022 09:50:23 +0800</pubDate>
+      
+      <guid>https://vgacisco.github.io/post/system/</guid>
+      <description>// //////////////////////////////////////////////////////////////////////////////// // // // system role 用来对集群主机进行基本配置，包括如下 // // 1. 关闭防火墙，swap分区，selinux // 2. 启动 chronyd 时间同步服务 // 3. 加载 ip_vs br_netfilter nf_conntrack ip_tables iptable_filter 模块 // 4. 开启 内核参数 // net.bridge.bridge-nf-iptables // net.bridge.bridge-nf-ip6tables // net.ipv4.ip_forward // 5. 关闭 内核参数 // net.ipv4.conf.all.rp_filter // net.ipv4.conf.default.rp_filter // net.swappiness // 6. 上传 hosts文档（PS: 这个文档由readiness.yaml 根据ansible 资源清单文件hosts生成） // 7. 在每个远程主机上生成 /etc/kubernetes/pki目录供将来使用 // 8. 设置远程主机名 （PS: 这个主机名直接使用 ansible资源清单文件的host_name变量 ） // // 说明： system role 目标主机为all .</description>
+    </item>
+    
+    <item>
+      <title>kubernetes-1.24仓库yaml_run/readiness.yaml文档说明</title>
+      <link>https://vgacisco.github.io/post/readiness/</link>
+      <pubDate>Fri, 19 Aug 2022 00:22:31 +0800</pubDate>
+      
+      <guid>https://vgacisco.github.io/post/readiness/</guid>
+      <description>这个文档用来说明 kubernetes-1.24 剧本的 readiness readiness 用来在集群安装前给集群准备 各种文件，证书并把二进制文件放到roles/bin，证书和其它 文档放到roles/files下， 二进制文件到roles/bin下 // // PS: 这个文件依赖主目录下的hosts资源清单文件得到集群主机信息，请正确配置hosts文件 // // 在新安装集群前应该，优先运行这个 playbook // 请在主斯文目录下使用 ansible-playbook yaml_run/readiness.yaml 运行 // // 文件位置： yaml_run/readiness.yaml // 版本: v1.0 // // 流程如下： + ## 根据模板文件生成 kube-apiserver etcd-server hosts 文件并放到roles/files 下供安装角色使用 + ## 调用 ./roles/files/make-certs.sh make-certs.sh用来生成集群使用的certs kubeconfig bootstrap.kubeconfig bootstrap-token-xxxx.yaml 以及calico文档 + ## 调用 ./roles/bin/readiness.sh 这个脚本用来解压 二进制安装包 kubernetes 安装包 etcd 安装包 + + </description>
+    </item>
+    
     <item>
       <title>二进制安装k8s 1.24.3</title>
       <link>https://vgacisco.github.io/post/myte/</link>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>kubernetes-1.24仓库yaml_run/readiness.yaml文档说明 // vgacisco</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.101.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://vgacisco.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="kubernetes-1.24仓库yaml_run/readiness.yaml文档说明"/>
+<meta name="twitter:description" content="这个文档用来说明 kubernetes-1.24 剧本的 readiness readiness 用来在集群安装前给集群准备 各种文件，证书并把二进制文件放到roles/bin，证书和其它 文档放到roles/files下， 二进制文件到roles/bin下 // // PS: 这个文件依赖主目录下的hosts资源清单文件得到集群主机信息，请正确配置hosts文件 // // 在新安装集群前应该，优先运行这个 playbook // 请在主斯文目录下使用 ansible-playbook yaml_run/readiness.yaml 运行 // // 文件位置： yaml_run/readiness.yaml // 版本: v1.0 // // 流程如下： &#43; ## 根据模板文件生成 kube-apiserver etcd-server hosts 文件并放到roles/files 下供安装角色使用 &#43; ## 调用 ./roles/files/make-certs.sh make-certs.sh用来生成集群使用的certs kubeconfig bootstrap.kubeconfig bootstrap-token-xxxx.yaml 以及calico文档 &#43; ## 调用 ./roles/bin/readiness.sh 这个脚本用来解压 二进制安装包 kubernetes 安装包 etcd 安装包 &#43; &#43; "/>
+
+    <meta property="og:title" content="kubernetes-1.24仓库yaml_run/readiness.yaml文档说明" />
+<meta property="og:description" content="这个文档用来说明 kubernetes-1.24 剧本的 readiness readiness 用来在集群安装前给集群准备 各种文件，证书并把二进制文件放到roles/bin，证书和其它 文档放到roles/files下， 二进制文件到roles/bin下 // // PS: 这个文件依赖主目录下的hosts资源清单文件得到集群主机信息，请正确配置hosts文件 // // 在新安装集群前应该，优先运行这个 playbook // 请在主斯文目录下使用 ansible-playbook yaml_run/readiness.yaml 运行 // // 文件位置： yaml_run/readiness.yaml // 版本: v1.0 // // 流程如下： &#43; ## 根据模板文件生成 kube-apiserver etcd-server hosts 文件并放到roles/files 下供安装角色使用 &#43; ## 调用 ./roles/files/make-certs.sh make-certs.sh用来生成集群使用的certs kubeconfig bootstrap.kubeconfig bootstrap-token-xxxx.yaml 以及calico文档 &#43; ## 调用 ./roles/bin/readiness.sh 这个脚本用来解压 二进制安装包 kubernetes 安装包 etcd 安装包 &#43; &#43; " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://vgacisco.github.io/post/readiness/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-08-19T00:22:31+08:00" />
+<meta property="article:modified_time" content="2022-08-19T00:22:31+08:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://vgacisco.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>vgacisco</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">kubernetes-1.24仓库yaml_run/readiness.yaml文档说明</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Aug 19, 2022
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="这个文档用来说明-kubernetes-124-剧本的-readiness">这个文档用来说明 kubernetes-1.24 剧本的 readiness</h1>
+<pre><code>readiness 用来在集群安装前给集群准备 各种文件，证书并把二进制文件放到roles/bin，证书和其它 文档放到roles/files下， 二进制文件到roles/bin下
+//
+// PS: 这个文件依赖主目录下的hosts资源清单文件得到集群主机信息，请正确配置hosts文件
+//     
+//     在新安装集群前应该，优先运行这个 playbook
+//     请在主斯文目录下使用 ansible-playbook yaml_run/readiness.yaml 运行
+//
+// 文件位置： yaml_run/readiness.yaml
+// 版本: v1.0
+//
+//
+流程如下：
+</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre><code>+ ## 根据模板文件生成 kube-apiserver etcd-server hosts 文件并放到roles/files 下供安装角色使用
+
++ ## 调用 ./roles/files/make-certs.sh
+    make-certs.sh用来生成集群使用的certs kubeconfig 
+   
+    bootstrap.kubeconfig bootstrap-token-xxxx.yaml 
+  
+    以及calico文档
+
++ ## 调用 ./roles/bin/readiness.sh 这个脚本用来解压 二进制安装包 
+    kubernetes 安装包 
+ 
+    etcd 安装包
+
+
++ 
+    + </code></pre>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

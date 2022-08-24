@@ -309,27 +309,27 @@
 <ul>
 <li>front-proxy-ca 这个ca文件给扩展api使用。我们用它来签一个客户证书 front-proxy-client</li>
 </ul>
-<p>{
-&ldquo;CA&rdquo;: {&ldquo;expiry&rdquo;: &ldquo;87600h&rdquo;},
-&ldquo;CN&rdquo;: &ldquo;kubernetes&rdquo;,
-&ldquo;hosts&rdquo;: [</p>
-<pre><code> ],
- &quot;key&quot;: {
-     &quot;algo&quot;: &quot;rsa&quot;,
-     &quot;size&quot;: 2048
- },
- &quot;names&quot;: [
-     {
-         &quot;C&quot;: &quot;CN&quot;,
-         &quot;ST&quot;: &quot;GX&quot;,
-         &quot;L&quot;: &quot;GL&quot;,
-         &quot;O&quot;: &quot;kubernetes&quot;,
-         &quot;OU&quot;: &quot;system&quot;
-     }
- ]
-</code></pre>
-<p>}</p>
-<p>front-proxy-client:
+<pre tabindex="0"><code>{
+    &#34;CA&#34;: {&#34;expiry&#34;: &#34;87600h&#34;},
+    &#34;CN&#34;: &#34;kubernetes&#34;,
+    &#34;hosts&#34;: [
+
+    ],
+    &#34;key&#34;: {
+        &#34;algo&#34;: &#34;rsa&#34;,
+        &#34;size&#34;: 2048
+    },
+    &#34;names&#34;: [
+        {
+            &#34;C&#34;: &#34;CN&#34;,
+            &#34;ST&#34;: &#34;GX&#34;,
+            &#34;L&#34;: &#34;GL&#34;,
+            &#34;O&#34;: &#34;kubernetes&#34;,
+            &#34;OU&#34;: &#34;system&#34;
+        }
+    ]
+}
+</code></pre><p>front-proxy-client:
 O: front-proxy-client
 CN: front-proxy-client</p>
 </li>
@@ -338,8 +338,8 @@ CN: front-proxy-client</p>
 略：</p>
 </li>
 <li>
-<p>安装etcd</p>
-</li>
+<p>etch 配置参数解释</p>
+<pre tabindex="0"><code></code></pre></li>
 <li>
 <p>安装containerd</p>
 </li>
