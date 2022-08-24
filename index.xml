@@ -6,7 +6,16 @@
     <description>Recent content on vgacisco</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Aug 2022 09:50:23 +0800</lastBuildDate><atom:link href="https://vgacisco.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Aug 2022 20:34:49 +0800</lastBuildDate><atom:link href="https://vgacisco.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>kubernetes-1.24.3 使用手册</title>
+      <link>https://vgacisco.github.io/post/use-kubernetes/</link>
+      <pubDate>Wed, 24 Aug 2022 20:34:49 +0800</pubDate>
+      
+      <guid>https://vgacisco.github.io/post/use-kubernetes/</guid>
+      <description>kubernetes 1.24.3 剧本使用手册 准备工作 ``` git clone https://www.github.com/vgacisco/kubernetes-1.24.3.git ``` 下载 kubernetes containerd etcd nginx 的二进制文件包, 放到文件夹roles/bin 里 按已有配置主目录hosts清单文件，集群的配置基于这个文件, 如果是使用kvm, 则配置一个基础centos8虚拟机并启用串口.如果使用其它虚拟系统请配置好虚拟机并配置好免密 安装 ``` # kvm ./lazy.sh auto_install base_system base_system_passwd ``` ``` # 其它虚拟机 ./lazy.sh auto_install ``` </description>
+    </item>
+    
     <item>
       <title>kubernetes-1.24仓库 system角色说明</title>
       <link>https://vgacisco.github.io/post/system/</link>
